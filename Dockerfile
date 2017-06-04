@@ -2,13 +2,6 @@ FROM alpine:3.5
 
 MAINTAINER Michael Alexander <michael@micalexander.com>
 
-ARG DEV_USER
-ARG RUBY_LOCAL_DIR=/usr/local/ruby
-ARG NODE_LOCAL_DIR=/usr/local/node
-
-ENV PATH $RUBY_LOCAL_DIR/bin:$NODE_LOCAL_DIR/bin:$PATH
-ENV DEV_USER $DEV_USER
-
 RUN apk add --update --update-cache \
     git \
     curl \
@@ -42,13 +35,15 @@ RUN apk add --update --update-cache \
 	  openssl-dev \
 	  yaml-dev \
 	  procps \
-	  zlib-dev
+	  zlib-dev \
+    && rm -rf /var/cache/apk/*
 
-RUN pip install --upgrade pip
+RUN pip install --upgrade \
+    pip \
+    httpie \
+    httpie-unixsocket
 
-RUN pip install httpie httpie-unixsocket && rm -rf /var/cache/apk/*
+COPY docker-bash-entrypoint /usr/local/bin/
 
-COPY docker-bash-entrypoint.sh /usr/local/bin/
-
-ENTRYPOINT ["docker-bash-entrypoint.sh"]
+ENTRYPOINT ["docker-bash-entrypoint"]
 
