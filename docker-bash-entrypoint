@@ -4,6 +4,8 @@ adduser -D -g ${DEV_USER} ${DEV_USER}
 
 echo ${DEV_USER}" ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-export PATH=${RUBY_LOCAL_DIR}/bin:${NODE_LOCAL_DIR}/bin:$PATH
+PATH=${RUBY_LOCAL_DIR}/bin:${NODE_LOCAL_DIR}/bin:$PATH
+
+export PATH
 
 tail -f /dev/null
