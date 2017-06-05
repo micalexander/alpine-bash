@@ -45,7 +45,5 @@ RUN pip install --upgrade \
 
 COPY docker-bash-entrypoint /usr/local/bin/
 
-CMD ["export PATH=$RUBY_LOCAL_BIN:$NODE_LOCAL_BIN:$PATH"]
-
 ENTRYPOINT ["docker-bash-entrypoint"]
 
