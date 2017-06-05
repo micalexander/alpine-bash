@@ -2,9 +2,6 @@ FROM alpine:3.5
 
 MAINTAINER Michael Alexander <michael@micalexander.com>
 
-ENV PATH ${RUBY_LOCAL_BIN}:$PATH
-ENV PATH ${NODE_LOCAL_BIN}:$PATH
-
 RUN apk add --update --update-cache \
     git \
     curl \
@@ -47,6 +44,8 @@ RUN pip install --upgrade \
     httpie-unixsocket
 
 COPY docker-bash-entrypoint /usr/local/bin/
+
+CMD ["export PATH=$RUBY_LOCAL_BIN:$NODE_LOCAL_BIN:$PATH"]
 
 ENTRYPOINT ["docker-bash-entrypoint"]
 
