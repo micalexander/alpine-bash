@@ -11,6 +11,7 @@ RUN apk add --update --update-cache \
     sed \
     bash \
     neovim \
+    openssh \
     mysql-client \
     python \
     py-pip \
