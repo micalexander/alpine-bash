@@ -21,6 +21,8 @@ RUN apk add --update --update-cache \
 	  libc-dev \
     gdbm \
     libcrypto1.0 \
+    libmcrypt \
+    libpng-dev \
     libffi \
     libssl1.0 \
     musl \
