@@ -4,10 +4,12 @@ MAINTAINER Michael Alexander <michael@micalexander.com>
 
 RUN apk add --update --update-cache \
     alpine-sdk \
+    ansible \
     bash \
     bzip2 \
     ca-certificates \
     curl \
+    docker \
     gdbm \
     grep \
     libcrypto1.0 \
@@ -22,6 +24,7 @@ RUN apk add --update --update-cache \
     mysql-client \
     ncurses-libs \
     neovim \
+    openrc \
     openssh \
     openssl-dev \
     procps \
