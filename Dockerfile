@@ -3,42 +3,38 @@ FROM alpine:3.5
 MAINTAINER Michael Alexander <michael@micalexander.com>
 
 RUN apk add --update --update-cache \
-    git \
-    curl \
-    tar \
-    unzip \
-    grep \
-    sed \
+    alpine-sdk \
     bash \
+    bzip2 \
+    ca-certificates \
+    curl \
+    gdbm \
+    grep \
+    libcrypto1.0 \
+    libedit-dev \
+    libffi \
+    libffi-dev \
+    libmcrypt \
+    libnotify \
+    libpng-dev \
+    libssl1.0 \
+    libxml2-dev \
+    mysql-client \
+    ncurses-libs \
     neovim \
     openssh \
-    mysql-client \
-    python \
+    openssl-dev \
+    procps \
     py-pip \
-    ca-certificates \
-    make \
-    gcc \
-	  libc-dev \
-    gdbm \
-    libcrypto1.0 \
-    libmcrypt \
-    libpng-dev \
-    libffi \
-    libssl1.0 \
-    musl \
-    ncurses-libs \
+    python \
     readline \
+    sed \
+    tar \
+    unzip \
     yaml \
+    yaml-dev \
     zlib \
-    bzip2 \
-    libedit-dev \
-    libxml2-dev \
-	  ca-certificates \
-	  libffi-dev \
-	  openssl-dev \
-	  yaml-dev \
-	  procps \
-	  zlib-dev \
+    zlib-dev \
     && rm -rf /var/cache/apk/*
 
 RUN pip install --upgrade \
