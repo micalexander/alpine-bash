@@ -1,7 +1,96 @@
 #!/bin/bash
 
-adduser -D -g ${DEV_USER} ${DEV_USER}
+if ! [[ `id -u ${DEV_USER} 2>/dev/null || echo -1` -ge 0 ]]; then
 
-echo ${DEV_USER}" ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+  adduser -D -g ${DEV_USER} ${DEV_USER}
+
+  echo ${DEV_USER}" ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+  echo 'Defaults env_keep += "PATH PYTHONPATH LD_LIBRARY_PATH"' >> /etc/sudoers
+
+
+sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
+
+    GEMS=(
+      swiftly
+      trio
+    )
+
+    NPMS=(
+      gulp-cli
+    )
+
+    PIPS=(
+      ansible
+      dopy
+      httpie-unixsocket
+      httpie
+      neovim
+    )
+
+    # Mounted Bins
+    export PATH=$PATH:/usr/local/ruby/bin
+    export PATH=$PATH:/usr/local/node/bin
+    export PATH=$PATH:/usr/local/php/bin
+    export PATH=$PATH:/usr/local/python/bin
+
+    # Package Bins
+    export PATH=$PATH:$HOME/.gem/ruby/2.4.0/bin
+    export PATH=$PATH:$HOME/.npm/bin
+    export PATH=$PATH:$HOME/.local/bin
+    export GEM_HOME=$HOME/.gem/ruby/2.4.0
+
+    # Libs
+    export LD_LIBRARY_PATH=/usr/local/ruby/lib
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/node/lib
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/php/lib
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python/lib
+
+    # Install FZF
+    FZF_DIR=${HOME}/.fzf
+
+    if [[ ! -d "$FZF_DIR"  ]]; then
+
+      git clone --depth 1 https://github.com/junegunn/fzf.git ${HOME}/.fzf;
+      ${HOME}/.fzf/install --all;
+    fi
+
+    # Install Gems
+    for gem in ${GEMS[@]}; do
+
+      gem_list=`gem list | grep $gem`;
+
+      if [[ -z $gem_list ]]; then
+
+        gem install $gem;
+      fi
+
+    done
+
+    # Install Node Packages
+    for np in ${NPMS[@]}; do
+
+      npm_list=`npm list -g | grep $np`;
+
+      if [[ -z $npm_list ]]; then
+
+        npm install --prefix ${HOME}/.npm $np -g;
+      fi
+
+    done
+
+    # Install PIP Packages
+    for pip in ${PIPS[@]}; do
+
+      pip_show=`pip show $pip`;
+
+      if [[ -z $pip_show ]]; then
+
+        pip install --user $pip;
+      fi
+
+    done
+
+EOF
+fi
 
 tail -f /dev/null
