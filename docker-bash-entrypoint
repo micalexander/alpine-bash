@@ -31,6 +31,13 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
       neovim
     )
 
+    # Needed Directories
+
+    DIRS=(
+      $HOME/.config
+      $HOME/.config/pip
+    )
+
     # Mounted Bins
     export PATH=$PATH:/usr/local/ruby/bin
     export PATH=$PATH:/usr/local/node/bin
@@ -57,6 +64,63 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
       git clone --depth 1 https://github.com/junegunn/fzf.git ${HOME}/.fzf;
       ${HOME}/.fzf/install --all;
     fi
+
+    append_line() {
+      set -e
+
+      local line file pat lno
+      line="$1"
+      file="$2"
+      pat="${3:-}"
+
+      echo "Update $file:"
+      echo "  - $line"
+      [ -f "$file" ] || touch "$file"
+      if [ $# -lt 3 ]; then
+        lno=$(\grep -nF "$line" "$file" | sed 's/:.*//' | tr '\n' ' ')
+      else
+        lno=$(\grep -nF "$pat" "$file" | sed 's/:.*//' | tr '\n' ' ')
+      fi
+      if [ -n "$lno" ]; then
+        echo "    - Already exists: line #$lno"
+      else
+        echo >> "$file"
+        echo "$line" >> "$file"
+        echo "    + Added"
+      fi
+
+      echo
+      set +e
+    }
+
+    for dir in ${DIRS[@]}; do
+
+      if [[ ! -d "$dir" ]]; then
+
+        mkdir -p $dir
+      fi
+
+    done
+
+
+    append_line 'prefix = ${HOME}/.npm' "$HOME/.npmrc" 'prefix'
+    append_line $'[install]\nuser=1' "$HOME/.config/pip/.pip.conf" 'user=1'
+
+    append_line 'export PATH=$PATH:$RUBY_LOCAL_DIR' "$HOME/.bash_profile" '$RUBY_LOCAL_DIR'
+    append_line 'export PATH=$PATH:$NODE_LOCAL_DIR' "$HOME/.bash_profile" '$NODE_LOCAL_DIR'
+    append_line 'export PATH=$PATH:$PHP_LOCAL_DIR' "$HOME/.bash_profile" '$PHP_LOCAL_DIR'
+    append_line 'export PATH=$PATH:$PYTHON_LOCAL_DIR' "$HOME/.bash_profile" '$PYTHON_LOCAL_DIR'
+
+    append_line 'export PATH=$PATH:$HOME/.gem/ruby/2.4.0/bin' "$HOME/.bash_profile" '$HOME/.gem/ruby/2.4.0/bin'
+    append_line 'export PATH=$PATH:$HOME/.npm/bin' "$HOME/.bash_profile" '$HOME/.npm/bin'
+    append_line 'export PATH=$PATH:$HOME/.local/bin' "$HOME/.bash_profile" '$HOME/.local/bin'
+    append_line 'export GEM_HOME=$HOME/.gem/ruby/2.4.0' "$HOME/.bash_profile" 'GEM_HOME=$HOME/.gem/ruby/2.4.0'
+    append_line 'export PYTHONPATH=$HOME/.pip' "$HOME/.bash_profile" 'export PYTHONPATH=$HOME/.pip'
+
+    append_line 'LD_LIBRARY_PATH=/usr/local/ruby/lib' "$HOME/.bash_profile" '$RUBY_LOCAL_DIR/../lib'
+    append_line 'LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/node/lib' "$HOME/.bash_profile" '$NODE_LOCAL_DIR/../lib'
+    append_line 'LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/php/lib' "$HOME/.bash_profile" '$PHP_LOCAL_DIR/../lib'
+    append_line 'LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python/lib' "$HOME/.bash_profile" '$PYTHON_LOCAL_DIR/../lib'
 
     # Install Gems
     for gem in ${GEMS[@]}; do

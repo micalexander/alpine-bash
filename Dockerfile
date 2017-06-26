@@ -19,15 +19,13 @@ RUN apk add --update --update-cache \
     libpng-dev \
     libxml2-dev \
     mysql-client \
-    ncurses-libs \
     neovim \
     openrc \
     openssh \
     openssl-dev \
     procps \
-    readline \
     sed \
-    tar \
+    the_silver_searcher \
     unzip \
     yaml-dev \
     && rm -rf /var/cache/apk/*
