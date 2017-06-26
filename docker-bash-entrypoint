@@ -15,6 +15,10 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
       trio
     )
 
+    PHP_PACKS=(
+      wp-cli/wp-cli
+    )
+
     NPMS=(
       gulp-cli
     )
@@ -62,6 +66,18 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
       if [[ -z $gem_list ]]; then
 
         gem install $gem;
+      fi
+
+    done
+
+    # Install PHP packages
+    for php_pack in ${PHP_PACKS[@]}; do
+
+      composer_show=`composer show | grep $php_pack`;
+
+      if [[ -z $composer_show ]]; then
+
+        composer global require $php_pack;
       fi
 
     done
