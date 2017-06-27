@@ -114,6 +114,7 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
     append_line 'export PATH=$PATH:$HOME/.gem/ruby/2.4.0/bin' "$HOME/.bash_profile" '$HOME/.gem/ruby/2.4.0/bin'
     append_line 'export PATH=$PATH:$HOME/.npm/bin' "$HOME/.bash_profile" '$HOME/.npm/bin'
     append_line 'export PATH=$PATH:$HOME/.local/bin' "$HOME/.bash_profile" '$HOME/.local/bin'
+    append_line 'export PATH=$PATH:$HOME/.composer/vendor/bin' "$HOME/.bash_profile" '$HOME/.composer/vendor/bin'
     append_line 'export GEM_HOME=$HOME/.gem/ruby/2.4.0' "$HOME/.bash_profile" 'GEM_HOME=$HOME/.gem/ruby/2.4.0'
     append_line 'export PYTHONPATH=$HOME/.pip' "$HOME/.bash_profile" 'export PYTHONPATH=$HOME/.pip'
 
