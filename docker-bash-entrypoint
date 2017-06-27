@@ -149,9 +149,9 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
 
     # Install Node Packages
     for np in ${NPMS[@]}; do
-
-      npm_list=`npm list -g | grep $np`;
-
+echo $np
+      npm_list=$(npm list -g | grep $np);
+echo $npm_list
       if [[ -z $npm_list ]]; then
 
         npm install --prefix ${HOME}/.npm $np -g;
