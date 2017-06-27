@@ -126,7 +126,7 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
     # Install Gems
     for gem in ${GEMS[@]}; do
 
-      gem_list=`gem list | grep $gem`;
+      gem_list=$(gem list | grep $gem);
 
       if [[ -z $gem_list ]]; then
 
@@ -138,7 +138,7 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
     # Install PHP packages
     for php_pack in ${PHP_PACKS[@]}; do
 
-      composer_show=`composer show | grep $php_pack`;
+      composer_show=$(composer show | grep $php_pack);
 
       if [[ -z $composer_show ]]; then
 
@@ -149,9 +149,9 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
 
     # Install Node Packages
     for np in ${NPMS[@]}; do
-echo $np
+
       npm_list=$(npm list -g | grep $np);
-echo $npm_list
+
       if [[ -z $npm_list ]]; then
 
         npm install --prefix ${HOME}/.npm $np -g;
@@ -162,7 +162,7 @@ echo $npm_list
     # Install PIP Packages
     for pip in ${PIPS[@]}; do
 
-      pip_show=`pip show $pip`;
+      pip_show=$(pip show $pip);
 
       if [[ -z $pip_show ]]; then
 
