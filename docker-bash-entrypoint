@@ -117,10 +117,10 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
     append_line 'export GEM_HOME=$HOME/.gem/ruby/2.4.0' "$HOME/.bash_profile" 'GEM_HOME=$HOME/.gem/ruby/2.4.0'
     append_line 'export PYTHONPATH=$HOME/.pip' "$HOME/.bash_profile" 'export PYTHONPATH=$HOME/.pip'
 
-    append_line 'LD_LIBRARY_PATH=/usr/local/ruby/lib' "$HOME/.bash_profile" '$RUBY_LOCAL_DIR/../lib'
-    append_line 'LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/node/lib' "$HOME/.bash_profile" '$NODE_LOCAL_DIR/../lib'
-    append_line 'LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/php/lib' "$HOME/.bash_profile" '$PHP_LOCAL_DIR/../lib'
-    append_line 'LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python/lib' "$HOME/.bash_profile" '$PYTHON_LOCAL_DIR/../lib'
+    append_line 'export LD_LIBRARY_PATH=/usr/local/ruby/lib' "$HOME/.bash_profile" '$RUBY_LOCAL_DIR/../lib'
+    append_line 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/node/lib' "$HOME/.bash_profile" '$NODE_LOCAL_DIR/../lib'
+    append_line 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/php/lib' "$HOME/.bash_profile" '$PHP_LOCAL_DIR/../lib'
+    append_line 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python/lib' "$HOME/.bash_profile" '$PYTHON_LOCAL_DIR/../lib'
 
     # Install Gems
     for gem in ${GEMS[@]}; do
