@@ -20,6 +20,7 @@ RUN apk add --update --update-cache \
     libxml2-dev \
     mysql-client \
     neovim \
+    neovim-doc \
     openrc \
     openssh \
     openssl-dev \
