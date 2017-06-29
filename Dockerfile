@@ -10,6 +10,7 @@ RUN apk add --update --update-cache \
     ctags \
     curl \
     docker \
+    findutils \
     gdbm \
     grep \
     libedit-dev \
@@ -24,6 +25,7 @@ RUN apk add --update --update-cache \
     openrc \
     openssh \
     openssl-dev \
+    perl \
     procps \
     sed \
     the_silver_searcher \
