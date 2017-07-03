@@ -23,7 +23,11 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
       gulp-cli
     )
 
-    PIPS=(
+    PIP2=(
+      neovim
+    )
+
+    PIP3=(
       ansible
       dopy
       httpie-unixsocket
@@ -42,7 +46,8 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
     export PATH=$PATH:/usr/local/ruby/bin
     export PATH=$PATH:/usr/local/node/bin
     export PATH=$PATH:/usr/local/php/bin
-    export PATH=$PATH:/usr/local/python/bin
+    export PATH=$PATH:/usr/local/python2/bin
+    export PATH=$PATH:/usr/local/python3/bin
 
     # Package Bins
     export PATH=$PATH:$HOME/.gem/ruby/2.4.0/bin
@@ -54,7 +59,8 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
     export LD_LIBRARY_PATH=/usr/local/ruby/lib
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/node/lib
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/php/lib
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python/lib
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python2/lib
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python3/lib
 
     # Install FZF
     FZF_DIR=${HOME}/.fzf
@@ -109,19 +115,20 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
     append_line 'export PATH=$PATH:$RUBY_LOCAL_DIR' "$HOME/.bash_profile" '$RUBY_LOCAL_DIR'
     append_line 'export PATH=$PATH:$NODE_LOCAL_DIR' "$HOME/.bash_profile" '$NODE_LOCAL_DIR'
     append_line 'export PATH=$PATH:$PHP_LOCAL_DIR' "$HOME/.bash_profile" '$PHP_LOCAL_DIR'
-    append_line 'export PATH=$PATH:$PYTHON_LOCAL_DIR' "$HOME/.bash_profile" '$PYTHON_LOCAL_DIR'
+    append_line 'export PATH=$PATH:$PYTHON2_LOCAL_DIR' "$HOME/.bash_profile" '$PYTHON2_LOCAL_DIR'
+    append_line 'export PATH=$PATH:$PYTHON3_LOCAL_DIR' "$HOME/.bash_profile" '$PYTHON3_LOCAL_DIR'
 
     append_line 'export PATH=$PATH:$HOME/.gem/ruby/2.4.0/bin' "$HOME/.bash_profile" '$HOME/.gem/ruby/2.4.0/bin'
     append_line 'export PATH=$PATH:$HOME/.npm/bin' "$HOME/.bash_profile" '$HOME/.npm/bin'
     append_line 'export PATH=$PATH:$HOME/.local/bin' "$HOME/.bash_profile" '$HOME/.local/bin'
     append_line 'export PATH=$PATH:$HOME/.composer/vendor/bin' "$HOME/.bash_profile" '$HOME/.composer/vendor/bin'
     append_line 'export GEM_HOME=$HOME/.gem/ruby/2.4.0' "$HOME/.bash_profile" 'GEM_HOME=$HOME/.gem/ruby/2.4.0'
-    append_line 'export PYTHONPATH=$HOME/.pip' "$HOME/.bash_profile" 'export PYTHONPATH=$HOME/.pip'
 
     append_line 'export LD_LIBRARY_PATH=$RUBY_LOCAL_DIR/../lib' "$HOME/.bash_profile" '$RUBY_LOCAL_DIR/../lib'
     append_line 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NODE_LOCAL_DIR/../lib' "$HOME/.bash_profile" '$NODE_LOCAL_DIR/../lib'
     append_line 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PHP_LOCAL_DIR/../lib' "$HOME/.bash_profile" '$PHP_LOCAL_DIR/../lib'
-    append_line 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PYTHON_LOCAL_DIR/../lib' "$HOME/.bash_profile" '$PYTHON_LOCAL_DIR/../lib'
+    append_line 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PYTHON2_LOCAL_DIR/../lib' "$HOME/.bash_profile" '$PYTHON2_LOCAL_DIR/../lib'
+    append_line 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PYTHON3_LOCAL_DIR/../lib' "$HOME/.bash_profile" '$PYTHON3_LOCAL_DIR/../lib'
 
     # Install Gems
     for gem in ${GEMS[@]}; do
@@ -131,6 +138,10 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
       if [[ -z $gem_list ]]; then
 
         gem install $gem;
+        echo "    + Installed $gem";
+      else
+
+        echo "    - $gem is already installed"
       fi
 
     done
@@ -143,6 +154,10 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
       if [[ -z $composer_show ]]; then
 
         composer global require $php_pack;
+        echo "    + Installed $php_pack";
+      else
+
+        echo "    - $php_pack is already installed"
       fi
 
     done
@@ -155,18 +170,42 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
       if [[ -z $npm_list ]]; then
 
         npm install --prefix ${HOME}/.npm $np -g;
+        echo "    + Installed $np";
+      else
+
+        echo "    - $np is already installed"
       fi
 
     done
 
     # Install PIP Packages
-    for pip in ${PIPS[@]}; do
+    for pip in ${PIP2[@]}; do
 
-      pip_show=$(pip show $pip);
+      pip_show=$(pip2 show $pip);
 
       if [[ -z $pip_show ]]; then
 
-        pip install --user $pip;
+        pip2 install --user $pip;
+        echo "    + Installed $pip";
+      else
+
+        echo "    - $pip is already installed"
+      fi
+
+    done
+
+    # Install PIP Packages
+    for pip in ${PIP3[@]}; do
+
+      pip_show=$(pip3 show $pip);
+
+      if [[ -z $pip_show ]]; then
+
+        pip3 install --user $pip;
+        echo "    + Installed $pip";
+      else
+
+        echo "    - $pip is already installed"
       fi
 
     done
