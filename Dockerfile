@@ -11,6 +11,7 @@ RUN apk add --update --update-cache \
     curl \
     docker \
     findutils \
+    freetype-dev \
     gdbm \
     grep \
     libedit-dev \
