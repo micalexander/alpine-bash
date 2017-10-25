@@ -14,6 +14,7 @@ RUN apk add --update --update-cache \
   freetype-dev \
   gdbm \
   grep \
+  jq \
   libedit-dev \
   libffi-dev \
   libmcrypt \
@@ -30,6 +31,7 @@ RUN apk add --update --update-cache \
   procps \
   sed \
   the_silver_searcher \
+  tzdata \
   unzip \
   wget \
   yaml-dev \
