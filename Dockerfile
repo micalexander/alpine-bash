@@ -21,6 +21,7 @@ RUN apk add --update --update-cache \
   libnotify \
   libpng-dev \
   libxml2-dev \
+  linux-headers \
   mysql-client \
   neovim \
   neovim-doc \

@@ -33,6 +33,7 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
       httpie-unixsocket
       httpie
       neovim
+      neovim-remote
     )
 
     # Needed Directories
