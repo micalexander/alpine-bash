@@ -29,6 +29,7 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
 
     PIP3=(
       ansible
+      awscli
       dopy
       httpie-unixsocket
       httpie
