@@ -1,11 +1,11 @@
-
-FROM alpine:3.5
+FROM alpine:3.6
 
 MAINTAINER Michael Alexander <michael@micalexander.com>
 
 RUN apk add --update --update-cache \
   alpine-sdk \
   bash \
+  bash-completion \
   bzip2 \
   ctags \
   curl \

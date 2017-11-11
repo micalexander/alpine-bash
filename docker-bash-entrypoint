@@ -110,7 +110,7 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
 
     done
 
-
+    append_line 'if [ -e /var/run/docker.sock ]; then sudo chown `whoami`:`whoami` /var/run/docker.sock; fi' "$HOME/.bash_profile" '-e /var/run/docker.sock'
     append_line 'prefix = ${HOME}/.npm' "$HOME/.npmrc" 'prefix'
     append_line $'[install]\nuser=1' "$HOME/.config/pip/.pip.conf" 'user=1'
 
