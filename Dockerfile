@@ -39,5 +39,6 @@ RUN apk add --update --update-cache \
   && rm -rf /var/cache/apk/*
 
 COPY docker-bash-entrypoint /usr/local/bin/
+COPY ssh-ident /usr/local/bin/
 
 ENTRYPOINT ["docker-bash-entrypoint"]
