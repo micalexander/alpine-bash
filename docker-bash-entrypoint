@@ -35,7 +35,7 @@ sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
       httpie
       neovim
       neovim-remote
-      ranger-fm
+      # ranger-fm
     )
 
     # Needed Directories
