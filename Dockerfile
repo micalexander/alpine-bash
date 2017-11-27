@@ -10,6 +10,7 @@ RUN apk add --update --update-cache \
   ctags \
   curl \
   docker \
+  file \
   findutils \
   freetype-dev \
   gdbm \
