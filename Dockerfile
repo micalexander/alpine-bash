@@ -36,6 +36,7 @@ RUN apk add --update --update-cache \
   procps \
   rsync \
   sed \
+  shadow \
   the_silver_searcher \
   tzdata \
   unzip \
