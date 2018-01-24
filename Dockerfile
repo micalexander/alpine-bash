@@ -17,6 +17,7 @@ RUN apk add --update --update-cache \
   freetype-dev \
   gdbm \
   grep \
+  htop \
   jq \
   libedit-dev \
   libffi-dev \
@@ -39,6 +40,7 @@ RUN apk add --update --update-cache \
   rsync \
   sed \
   shadow \
+  tcpdump \
   the_silver_searcher \
   tmux \
   tzdata \
