@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:edge
 
 MAINTAINER Michael Alexander <michael@micalexander.com>
 
@@ -25,7 +25,9 @@ RUN apk add --update --update-cache \
   libpng-dev \
   libxml2-dev \
   linux-headers \
+  man \
   mysql-client \
+  mosh \
   nasm \
   neovim \
   neovim-doc \
@@ -38,6 +40,7 @@ RUN apk add --update --update-cache \
   sed \
   shadow \
   the_silver_searcher \
+  tmux \
   tzdata \
   unzip \
   wget \
