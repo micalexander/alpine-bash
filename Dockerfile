@@ -24,6 +24,7 @@ RUN apk add --update --update-cache \
   libmcrypt \
   libnotify \
   libpng-dev \
+  libsodium \
   libxml2-dev \
   linux-headers \
   man \
@@ -35,6 +36,7 @@ RUN apk add --update --update-cache \
   openrc \
   openssh \
   openssl-dev \
+  pcre-dev \
   perl \
   procps \
   rsync \
