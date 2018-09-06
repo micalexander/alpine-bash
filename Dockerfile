@@ -26,6 +26,7 @@ RUN apk add --update --update-cache \
   libpng-dev \
   libsodium \
   libxml2-dev \
+  libxslt-dev \
   linux-headers \
   man \
   mysql-client \
