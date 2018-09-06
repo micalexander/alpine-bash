@@ -32,6 +32,7 @@ RUN apk add --update --update-cache \
   mysql-client \
   mosh \
   nasm \
+  ncurses \
   neovim \
   neovim-doc \
   openrc \
