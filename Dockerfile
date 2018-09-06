@@ -43,6 +43,7 @@ RUN apk add --update --update-cache \
   rsync \
   sed \
   shadow \
+  sqlite-libs \
   tcpdump \
   the_silver_searcher \
   tmux \
