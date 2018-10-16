@@ -52,6 +52,7 @@ RUN apk add --update --update-cache \
   unzip \
   wget \
   yaml-dev \
+  yarn \
   && rm -rf /var/cache/apk/*
 
 COPY docker-bash-entrypoint /usr/local/bin/
