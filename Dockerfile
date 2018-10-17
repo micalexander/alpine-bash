@@ -54,8 +54,11 @@ RUN apk add --update --update-cache \
   yaml-dev \
   yarn \
   && rm -rf /var/cache/apk/*
-  
+
 COPY append_line /usr/local/bin/
+COPY docker-bash-pathways /usr/local/bin/
+COPY docker-bash-globals /usr/local/bin/
+COPY packs/ /usr/local/bin/
 COPY docker-bash-entrypoint /usr/local/bin/
 
 ENTRYPOINT ["docker-bash-entrypoint"]

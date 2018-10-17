@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# file needle text-to-append
+IFS=$'\n' read -d '' -r -a lines <<"EOF"
+"$HOME/.npmrc" 'prefix' 'prefix = ${HOME}/.npm'
+"$HOME/.config/pip/.pip.conf" 'user=1' $'[install]\nuser=1'
+"$HOME/.bash_profile" '$RUBY_LOCAL_DIR' 'export PATH=$PATH:$RUBY_LOCAL_DIR'
+"$HOME/.bash_profile" '$NODE_LOCAL_DIR' 'export PATH=$PATH:$NODE_LOCAL_DIR'
+"$HOME/.bash_profile" '$PHP_LOCAL_DIR' 'export PATH=$PATH:$PHP_LOCAL_DIR'
+"$HOME/.bash_profile" '$PYTHON2_LOCAL_DIR' 'export PATH=$PATH:$PYTHON2_LOCAL_DIR'
+"$HOME/.bash_profile" '$PYTHON3_LOCAL_DIR' 'export PATH=$PATH:$PYTHON3_LOCAL_DIR'
+"$HOME/.bash_profile" '$HOME/.gem/ruby/2.4.0/bin' 'export PATH=$PATH:$HOME/.gem/ruby/2.4.0/bin'
+"$HOME/.bash_profile" '$HOME/.npm/bin' 'export PATH=$PATH:$HOME/.npm/bin'
+"$HOME/.bash_profile" '$HOME/.local/bin' 'export PATH=$PATH:$HOME/.local/bin'
+"$HOME/.bash_profile" '$HOME/.composer/vendor/bin' 'export PATH=$PATH:$HOME/.composer/vendor/bin'
+"$HOME/.bash_profile" 'GEM_HOME=$HOME/.gem/ruby/2.4.0' 'export GEM_HOME=$HOME/.gem/ruby/2.4.0'
+"$HOME/.bash_profile" '$RUBY_LOCAL_DIR/../lib' 'export LD_LIBRARY_PATH=$RUBY_LOCAL_DIR/../lib'
+"$HOME/.bash_profile" '$NODE_LOCAL_DIR/../lib' 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NODE_LOCAL_DIR/../lib'
+"$HOME/.bash_profile" '$PHP_LOCAL_DIR/../lib' 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PHP_LOCAL_DIR/../lib'
+"$HOME/.bash_profile" '$PYTHON2_LOCAL_DIR/../lib' 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PYTHON2_LOCAL_DIR/../lib'
+"$HOME/.bash_profile" '$PYTHON3_LOCAL_DIR/../lib' 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PYTHON3_LOCAL_DIR/../lib'
+"$HOME/.bash_profile" '-e /var/run/docker.sock' 'if [ -e /var/run/docker.sock ]; then sudo chown `whoami`:`whoami` /var/run/docker.sock; fi'
+EOF
+
+for line in "${lines[@]}"; do
+  eval append_line "${line}"
+done
+

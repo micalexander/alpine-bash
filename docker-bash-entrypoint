@@ -1,219 +1,29 @@
 #!/bin/bash
+app_dir=$(pwd)
+
+append_line "/etc/sudoers" "PATH PYTHONPATH LD_LIBRARY_PATH" 'Defaults env_keep += "PATH PYTHONPATH LD_LIBRARY_PATH"'
+append_line "/etc/sudoers" "${DEV_USER}" "${DEV_USER} ALL=(ALL) NOPASSWD:ALL"_
 
 if ! [[ `id -u ${DEV_USER} 2>/dev/null || echo -1` -ge 0 ]]; then
 
   adduser -D -g ${DEV_USER} ${DEV_USER} -s /bin/bash
+  sudo -u "${DEV_USER}" -E -i /bin/bash touch $HOME/.newuser
 
-  echo ${DEV_USER}" ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-  echo 'Defaults env_keep += "PATH PYTHONPATH LD_LIBRARY_PATH"' >> /etc/sudoers
-
+fi
 
 sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
 
-    GEMS=(
-      swiftly
-      trio
-    )
+  if [[ -f "$HOME/.newuser" ]]; then
 
-    PHP_PACKS=(
-      wp-cli/wp-cli
-    )
+    docker-bash-pathways
 
-    NPMS=(
-      gulp-cli
-    )
+    source $HOME/.bash_profile
 
-    PIP2=(
-      neovim
-    )
+    docker-bash-globals
 
-    PIP3=(
-      ansible
-      awscli
-      dopy
-      httpie-unixsocket
-      httpie
-      neovim
-      neovim-remote
-      # ranger-fm
-    )
-
-    # Needed Directories
-
-    DIRS=(
-      $HOME/.config
-      $HOME/.config/pip
-    )
-
-    # Mounted Bins
-    export PATH=$PATH:/usr/local/ruby/bin
-    export PATH=$PATH:/usr/local/node/bin
-    export PATH=$PATH:/usr/local/php/bin
-    export PATH=$PATH:/usr/local/python2/bin
-    export PATH=$PATH:/usr/local/python3/bin
-
-    # Package Bins
-    export PATH=$PATH:$HOME/.gem/ruby/2.4.0/bin
-    export PATH=$PATH:$HOME/.npm/bin
-    export PATH=$PATH:$HOME/.local/bin
-    export GEM_HOME=$HOME/.gem/ruby/2.4.0
-
-    # Libs
-    export LD_LIBRARY_PATH=/usr/local/ruby/lib
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/node/lib
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/php/lib
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python2/lib
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python3/lib
-
-    # Install FZF
-    FZF_DIR=${HOME}/.fzf
-
-    if [[ ! -d "$FZF_DIR"  ]]; then
-
-      git clone --depth 1 https://github.com/junegunn/fzf.git ${HOME}/.fzf;
-      ${HOME}/.fzf/install --all;
-    fi
-
-    append_line() {
-      set -e
-
-      local line file pat lno
-      line="$1"
-      file="$2"
-      pat="${3:-}"
-
-      echo "Update $file:"
-      echo "  - $line"
-      [ -f "$file" ] || touch "$file"
-      if [ $# -lt 3 ]; then
-        lno=$(\grep -nF "$line" "$file" | sed 's/:.*//' | tr '\n' ' ')
-      else
-        lno=$(\grep -nF "$pat" "$file" | sed 's/:.*//' | tr '\n' ' ')
-      fi
-      if [ -n "$lno" ]; then
-        echo "    - Already exists: line #$lno"
-      else
-        echo >> "$file"
-        echo "$line" >> "$file"
-        echo "    + Added"
-      fi
-
-      echo
-      set +e
-    }
-
-    for dir in ${DIRS[@]}; do
-
-      if [[ ! -d "$dir" ]]; then
-
-        mkdir -p $dir
-      fi
-
-    done
-
-    append_line 'if [ -e /var/run/docker.sock ]; then sudo chown `whoami`:`whoami` /var/run/docker.sock; fi' "$HOME/.bash_profile" '-e /var/run/docker.sock'
-    append_line 'prefix = ${HOME}/.npm' "$HOME/.npmrc" 'prefix'
-    append_line $'[install]\nuser=1' "$HOME/.config/pip/.pip.conf" 'user=1'
-
-    append_line 'export PATH=$PATH:$RUBY_LOCAL_DIR' "$HOME/.bash_profile" '$RUBY_LOCAL_DIR'
-    append_line 'export PATH=$PATH:$NODE_LOCAL_DIR' "$HOME/.bash_profile" '$NODE_LOCAL_DIR'
-    append_line 'export PATH=$PATH:$PHP_LOCAL_DIR' "$HOME/.bash_profile" '$PHP_LOCAL_DIR'
-    append_line 'export PATH=$PATH:$PYTHON2_LOCAL_DIR' "$HOME/.bash_profile" '$PYTHON2_LOCAL_DIR'
-    append_line 'export PATH=$PATH:$PYTHON3_LOCAL_DIR' "$HOME/.bash_profile" '$PYTHON3_LOCAL_DIR'
-
-    append_line 'export PATH=$PATH:$HOME/.gem/ruby/2.4.0/bin' "$HOME/.bash_profile" '$HOME/.gem/ruby/2.4.0/bin'
-    append_line 'export PATH=$PATH:$HOME/.npm/bin' "$HOME/.bash_profile" '$HOME/.npm/bin'
-    append_line 'export PATH=$PATH:$HOME/.local/bin' "$HOME/.bash_profile" '$HOME/.local/bin'
-    append_line 'export PATH=$PATH:$HOME/.composer/vendor/bin' "$HOME/.bash_profile" '$HOME/.composer/vendor/bin'
-    append_line 'export GEM_HOME=$HOME/.gem/ruby/2.4.0' "$HOME/.bash_profile" 'GEM_HOME=$HOME/.gem/ruby/2.4.0'
-
-    append_line 'export LD_LIBRARY_PATH=$RUBY_LOCAL_DIR/../lib' "$HOME/.bash_profile" '$RUBY_LOCAL_DIR/../lib'
-    append_line 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NODE_LOCAL_DIR/../lib' "$HOME/.bash_profile" '$NODE_LOCAL_DIR/../lib'
-    append_line 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PHP_LOCAL_DIR/../lib' "$HOME/.bash_profile" '$PHP_LOCAL_DIR/../lib'
-    append_line 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PYTHON2_LOCAL_DIR/../lib' "$HOME/.bash_profile" '$PYTHON2_LOCAL_DIR/../lib'
-    append_line 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PYTHON3_LOCAL_DIR/../lib' "$HOME/.bash_profile" '$PYTHON3_LOCAL_DIR/../lib'
-
-    # Install Gems
-    for gem in ${GEMS[@]}; do
-
-      gem_list=$(gem list | grep $gem);
-
-      if [[ -z $gem_list ]]; then
-
-        gem install $gem;
-        echo "    + Installed $gem";
-      else
-
-        echo "    - $gem is already installed"
-      fi
-
-    done
-
-    # Install PHP packages
-    for php_pack in ${PHP_PACKS[@]}; do
-
-      composer_show=$(composer show | grep $php_pack);
-
-      if [[ -z $composer_show ]]; then
-
-        composer global require $php_pack;
-        echo "    + Installed $php_pack";
-      else
-
-        echo "    - $php_pack is already installed"
-      fi
-
-    done
-
-    # Install Node Packages
-    for np in ${NPMS[@]}; do
-
-      npm_list=$(npm list -g | grep $np);
-
-      if [[ -z $npm_list ]]; then
-
-        npm install --prefix ${HOME}/.npm $np -g;
-        echo "    + Installed $np";
-      else
-
-        echo "    - $np is already installed"
-      fi
-
-    done
-
-    # Install PIP Packages
-    for pip in ${PIP2[@]}; do
-
-      pip_show=$(pip2 show $pip);
-
-      if [[ -z $pip_show ]]; then
-
-        pip2 install --user $pip;
-        echo "    + Installed $pip";
-      else
-
-        echo "    - $pip is already installed"
-      fi
-
-    done
-
-    # Install PIP Packages
-    for pip in ${PIP3[@]}; do
-
-      pip_show=$(pip3 show $pip);
-
-      if [[ -z $pip_show ]]; then
-
-        pip3 install --user $pip;
-        echo "    + Installed $pip";
-      else
-
-        echo "    - $pip is already installed"
-      fi
-
-    done
+    rm $HOME/.newuser
+  fi
 
 EOF
-fi
 
 tail -f /dev/null

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+declare -A commands
+declare -A checks
+
+commands[gem]="pip2 install --user %s"
+commands[pip2]="pip2 install --user %s"
+commands[pip3]="pip3 install --user %s"
+commands[php]="composer global require %s"
+commands[npm]="yarn global add %s"
+
+checks[gem]="gem list | grep "
+checks[pip2]="pip2 show "
+checks[pip3]="pip3 show "
+checks[php]="composer show | grep "
+checks[npm]="npm list -g | grep "
+
+[[ ! -d "$HOME/.fzf" ]] || git clone --depth 1 https://github.com/junegunn/fzf.git ${HOME}/.fzf && ${HOME}/.fzf/install --all;
+
+[[ -d "$HOME/.config/pip" ]] || mkdir -p $HOME/.config/pip
+
+for filename in $(dirname "$0")/packs/*; do
+  IFS=$'\n' read -d '' -r -a lines < $filename
+  for line in "${lines[@]}"; do
+    check=$(eval ${checks[$(basename $filename)]} "${line}")
+
+    if [[ -z $check ]]; then
+      eval "${commands[$(basename $filename)]}\n" "${line}"
+    fi
+  done
+done

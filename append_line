@@ -1,0 +1,33 @@
+#!/bin/bash
+
+append_line() {
+  set -e
+
+  local line file pat lno
+
+  file="$1"
+  pat="${2:-}"
+  line="$3"
+
+  echo "Update $file:"
+  echo "  - $line"
+
+  [ -f "$file" ] || touch "$file"
+  if [ $# -lt 3 ]; then
+    lno=$(\grep -nF "$line" "$file" | sed 's/:.*//' | tr '\n' ' ')
+  else
+    lno=$(\grep -nF "$pat" "$file" | sed 's/:.*//' | tr '\n' ' ')
+  fi
+  if [ -n "$lno" ]; then
+    echo "    - Already exists: line #$lno"
+  else
+    echo "$line" >> "$file"
+    echo "    + Added"
+  fi
+
+  echo
+  set +e
+}
+
+append_line "$1" "$2" "$3"
+
