@@ -15,7 +15,7 @@ checks[pip3]="pip3 show "
 checks[php]="composer show | grep "
 checks[npm]="npm list -g | grep "
 
-[[ ! -d "$HOME/.fzf" ]] || git clone --depth 1 https://github.com/junegunn/fzf.git ${HOME}/.fzf && ${HOME}/.fzf/install --all;
+[[ -d "$HOME/.fzf" ]] || git clone --depth 1 https://github.com/junegunn/fzf.git ${HOME}/.fzf && ${HOME}/.fzf/install --all;
 
 [[ -d "$HOME/.config/pip" ]] || mkdir -p $HOME/.config/pip
 
@@ -25,7 +25,7 @@ for filename in $(dirname "$0")/packs/*; do
     check=$(eval ${checks[$(basename $filename)]} "${line}")
 
     if [[ -z $check ]]; then
-      eval "${commands[$(basename $filename)]}\n" "${line}"
+      eval "${commands[$(basename $filename)]}" "${line}"
     fi
   done
 done

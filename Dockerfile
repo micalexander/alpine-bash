@@ -6,6 +6,7 @@ RUN apk add --update --update-cache \
   alpine-sdk \
   autoconf \
   automake \
+  argon2-libs \
   bash \
   bash-completion \
   bzip2 \
@@ -24,6 +25,7 @@ RUN apk add --update --update-cache \
   libmcrypt \
   libnotify \
   libpng-dev \
+  libressl2.7-libcrypto \
   libsodium \
   libxml2-dev \
   libxslt-dev \
@@ -58,7 +60,7 @@ RUN apk add --update --update-cache \
 COPY append_line /usr/local/bin/
 COPY docker-bash-pathways /usr/local/bin/
 COPY docker-bash-globals /usr/local/bin/
-COPY packs/ /usr/local/bin/
+COPY packs/ /usr/local/bin/packs/
 COPY docker-bash-entrypoint /usr/local/bin/
 
 ENTRYPOINT ["docker-bash-entrypoint"]

@@ -2,7 +2,7 @@
 app_dir=$(pwd)
 
 append_line "/etc/sudoers" "PATH PYTHONPATH LD_LIBRARY_PATH" 'Defaults env_keep += "PATH PYTHONPATH LD_LIBRARY_PATH"'
-append_line "/etc/sudoers" "${DEV_USER}" "${DEV_USER} ALL=(ALL) NOPASSWD:ALL"_
+append_line "/etc/sudoers" "${DEV_USER}" "${DEV_USER} ALL=(ALL) NOPASSWD:ALL"
 
 if ! [[ `id -u ${DEV_USER} 2>/dev/null || echo -1` -ge 0 ]]; then
 
