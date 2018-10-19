@@ -3,11 +3,11 @@
 declare -A commands
 declare -A checks
 
-commands[gem]="pip2 install --user %s"
-commands[pip2]="pip2 install --user %s"
-commands[pip3]="pip3 install --user %s"
-commands[php]="composer global require %s"
-commands[npm]="yarn global add %s"
+commands[gem]="pip2 install --user "
+commands[pip2]="pip2 install --user "
+commands[pip3]="pip3 install --user "
+commands[php]="composer global require "
+commands[npm]="yarn global add "
 
 checks[gem]="gem list | grep "
 checks[pip2]="pip2 show "
