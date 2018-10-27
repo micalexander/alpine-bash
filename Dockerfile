@@ -50,6 +50,7 @@ RUN apk add --update --update-cache \
   tcpdump \
   the_silver_searcher \
   tmux \
+  tree \
   tzdata \
   unzip \
   wget \
