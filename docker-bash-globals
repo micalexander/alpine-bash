@@ -25,7 +25,6 @@ for filename in $(dirname "$0")/packs/*; do
     check=$(eval ${checks[$(basename $filename)]} "${line}")
 
     if [[ -z $check ]]; then
-      echo $(whoami)
       eval "${commands[$(basename $filename)]}" "${line}"
     fi
   done
