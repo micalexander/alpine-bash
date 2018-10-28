@@ -3,15 +3,15 @@
 declare -A commands
 declare -A checks
 
-commands[gem]="pip2 install --user "
+commands[gem]="gem install --user-install "
 commands[pip2]="pip2 install --user "
 commands[pip3]="pip3 install --user "
 commands[php]="composer global require "
 commands[npm]="yarn global add "
 
 checks[gem]="gem list | grep "
-checks[pip2]="pip2 show "
-checks[pip3]="pip3 show "
+checks[pip2]="pip2 show | grep "
+checks[pip3]="pip3 show | grep "
 checks[php]="composer show | grep "
 checks[npm]="npm list -g | grep "
 
