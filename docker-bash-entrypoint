@@ -7,11 +7,11 @@ append_line "/etc/sudoers" "${DEV_USER}" "${DEV_USER} ALL=(ALL) NOPASSWD:ALL"
 if ! [[ `id -u ${DEV_USER} 2>/dev/null || echo -1` -ge 0 ]]; then
 
   adduser -D -g ${DEV_USER} ${DEV_USER} -s /bin/bash
-  sudo -u "${DEV_USER}" -E -i /bin/bash touch $HOME/.newuser
+  sudo -u "${DEV_USER}" -i /bin/bash touch $HOME/.newuser
 
 fi
 
-sudo -u "${DEV_USER}" -E -i /bin/bash <<-'EOF'
+sudo -u "${DEV_USER}" -i /bin/bash <<-'EOF'
 
   if [[ -f "$HOME/.newuser" ]]; then
 
