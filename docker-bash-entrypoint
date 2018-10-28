@@ -7,7 +7,10 @@ append_line "/etc/sudoers" "${DEV_USER}" "${DEV_USER} ALL=(ALL) NOPASSWD:ALL"
 if ! [[ `id -u ${DEV_USER} 2>/dev/null || echo -1` -ge 0 ]]; then
 
   adduser -D -g ${DEV_USER} ${DEV_USER} -s /bin/bash
-  sudo -u "${DEV_USER}" -i /bin/bash touch $HOME/.newuser
+  touch /home/${DEV_USER}/.newuser
+  chown ${DEV_USER}:${DEV_USER} /home/${DEV_USER}/.newuser
+  chown ${DEV_USER}:${DEV_USER} /usr/local/bin/docker-bash-pathways
+  chown ${DEV_USER}:${DEV_USER} /usr/local/bin/docker-bash-globals
 
 fi
 
