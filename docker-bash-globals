@@ -26,6 +26,10 @@ for filename in $(dirname "$0")/packs/*; do
 
     if [[ -z $check ]]; then
       eval "${commands[$(basename $filename)]}" "${line}"
+      echo "    + $(basename $filename)] installed ${line} successfully"
+    else
+      echo "    - $(basename $filename)] already installed"
+      echo "      skipping"
     fi
   done
 done
