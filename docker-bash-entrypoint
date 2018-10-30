@@ -4,6 +4,9 @@ app_dir=$(pwd)
 append_line "/etc/sudoers" "PATH PYTHONPATH LD_LIBRARY_PATH" 'Defaults env_keep += "PATH PYTHONPATH LD_LIBRARY_PATH PYTHON2_LOCAL_DIR PYTHON3_LOCAL_DIR PHP_LOCAL_DIR NODE_LOCAL_DIR RUBY_LOCAL_DIR GO_LOCAL_DIR"'
 append_line "/etc/sudoers" "${DEV_USER}" "${DEV_USER} ALL=(ALL) NOPASSWD:ALL"
 
+append_line "/etc/environment" "PHP_LOCAL_DIR" "PHP_LOCAL_DIR:/usr/local/php"
+append_line "/etc/environment" "LD_LIBRARY_PATH" 'LD_LIBRARY_PATH=$PHP_LOCAL_DIR/../lib:$LD_LIBRARY_PATH'
+
 if ! [[ `id -u ${DEV_USER} 2>/dev/null || echo -1` -ge 0 ]]; then
   adduser -D -g ${DEV_USER} ${DEV_USER} -s /bin/bash
   touch /home/${DEV_USER}/.newuser
