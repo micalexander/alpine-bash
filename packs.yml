@@ -2,14 +2,6 @@
   connection: local
   become: yes
   become_user: ubuntu
-  environment:
-    PHP_LOCAL_DIR: '/usr/local/php/bin'
-    NODE_LOCAL_DIR: '/usr/local/node/bin'
-    PYTHON2_LOCAL_DIR: '/usr/local/python2/bin'
-    PYTHON3_LOCAL_DIR: '/usr/local/python3/bin'
-    RUBY_LOCAL_DIR: '/usr/local/ruby/bin'
-    LD_LIBRARY_PATH: '/usr/local/ruby/lib:$NODE_LOCAL_DIR/../lib:/usr/local/php/lib:$PYTHON2_LOCAL_DIR/../lib:$PYTHON3_LOCAL_DIR/../lib'
-    PATH: '/usr/local/ruby/bin:/usr/local/php/bin:$PYTHON2_LOCAL_DIR:$PYTHON3_LOCAL_DIR:$NODE_LOCAL_DIR:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   gather_facts: false
   vars:
     phps:
