@@ -4,6 +4,7 @@ MAINTAINER Michael Alexander <michael@micalexander.com>
 
 RUN apk add --update --update-cache \
   alpine-sdk \
+  ansible \
   autoconf \
   automake \
   argon2-libs \
