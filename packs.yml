@@ -8,8 +8,8 @@
     PYTHON2_LOCAL_DIR: '/usr/local/python2'
     PYTHON3_LOCAL_DIR: '/usr/local/python3'
     RUBY_LOCAL_DIR: '/usr/local/ruby'
-    LD_LIBRARY_PATH: '$RUBY_LOCAL_DIR/../lib:$NODE_LOCAL_DIR/../lib:$PHP_LOCAL_DIR/../lib:$PYTHON2_LOCAL_DIR/../lib:$PYTHON3_LOCAL_DIR/../lib'
-    PATH: '$RUBY_LOCAL_DIR:$PHP_LOCAL_DIR:$PYTHON2_LOCAL_DIR:$PYTHON3_LOCAL_DIR:$NODE_LOCAL_DIR:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    LD_LIBRARY_PATH: '/usr/local/ruby/../lib:$NODE_LOCAL_DIR/../lib:/usr/local/php/../lib:$PYTHON2_LOCAL_DIR/../lib:$PYTHON3_LOCAL_DIR/../lib'
+    PATH: '/usr/local/ruby:/usr/local/php:$PYTHON2_LOCAL_DIR:$PYTHON3_LOCAL_DIR:$NODE_LOCAL_DIR:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   gather_facts: false
   vars:
     phps:
