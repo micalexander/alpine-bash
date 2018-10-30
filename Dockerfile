@@ -60,7 +60,6 @@ RUN apk add --update --update-cache \
   && rm -rf /var/cache/apk/*
 
 COPY append_line /usr/local/bin/
-COPY global-path-additions.sh /etc/profile.d/
 COPY docker-bash-pathways /usr/local/bin/
 COPY docker-bash-globals /usr/local/bin/
 COPY packs.yml /usr/local/bin/
