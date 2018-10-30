@@ -6,8 +6,8 @@ append_line "/etc/sudoers" "${DEV_USER}" "${DEV_USER} ALL=(ALL) NOPASSWD:ALL"
 
 append_line "/etc/environment" "PHP_LOCAL_DIR" "PHP_LOCAL_DIR:/usr/local/php/bin"
 append_line "/etc/environment" "NODE_LOCAL_DIR" "PHP_LOCAL_DIR:/usr/local/node/bin"
-append_line "/etc/environment" "LD_LIBRARY_PATH" 'LD_LIBRARY_PATH=$PHP_LOCAL_DIR/../lib:$LD_LIBRARY_PATH'
-append_line "/etc/environment" "LD_LIBRARY_PATH" 'LD_LIBRARY_PATH=$NODE_LOCAL_DIR/../lib:$LD_LIBRARY_PATH'
+append_line "/etc/environment" 'LD_LIBRARY_PATH=$PHP_LOCAL_DIR' 'LD_LIBRARY_PATH=$PHP_LOCAL_DIR/../lib:$LD_LIBRARY_PATH'
+append_line "/etc/environment" 'LD_LIBRARY_PATH=$NODE_LOCAL_DIR' 'LD_LIBRARY_PATH=$NODE_LOCAL_DIR/../lib:$LD_LIBRARY_PATH'
 
 if ! [[ `id -u ${DEV_USER} 2>/dev/null || echo -1` -ge 0 ]]; then
   adduser -D -g ${DEV_USER} ${DEV_USER} -s /bin/bash
