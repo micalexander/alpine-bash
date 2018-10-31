@@ -40,7 +40,7 @@
         create: yes
         dest: /etc/profile.d/global-envs.sh
         state: present
-        regexp: "^%{{ item.regexp }}"
+        regexp: "^{{ item.regexp }}"
         line: "{{ item.line }}"
       with_items:
         - { regexp: 'LD_LIBRARY_PATH', line:  'export LD_LIBRARY_PATH=/usr/local/php/lib:/usr/local/node/lib:/usr/local/ruby/lib:/usr/local/python2/lib:/usr/local/python3/lib'}
@@ -68,7 +68,7 @@
             create: yes
             dest: ~/.config/pip/pip.conf
             state: present
-            regexp: "^%{{ item.regexp }}"
+            regexp: "{{ item.regexp }}"
             line: "{{ item.line }}"
           with_items:
             - { regexp: '[install]', line: '[install]'}
@@ -78,7 +78,7 @@
             create: yes
             dest: ~/.npmrc
             state: present
-            regexp: "^%{{ item.regexp }}"
+            regexp: "{{ item.regexp }}"
             line: "{{ item.line }}"
           with_items:
             - { regexp: 'prefix = ${HOME}/.npm', line: 'prefix = ${HOME}/.npm'}
