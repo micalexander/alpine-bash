@@ -54,7 +54,7 @@
             create: yes
             dest: ~/.bash_profile
             state: present
-            regexp: "^%{{ item.regexp }}"
+            regexp: "{{ item.regexp }}"
             line: "{{ item.line }}"
           with_items:
             - { regexp: '$HOME/.gem/ruby', line:  "export $HOME/.gem/ruby/$(ruby -v | awk -F ' ' '{print $2}' | cut -d '.' -f 1,2).0/bin"}
