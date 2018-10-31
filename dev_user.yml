@@ -57,7 +57,7 @@
             regexp: "^%{{ item.regexp }}"
             line: "{{ item.line }}"
           with_items:
-            - { regexp: '$HOME/.gem/ruby', line:  "$HOME/.gem/ruby/$(ruby -v | awk -F ' ' '{print $2}' | cut -d '.' -f 1,2).0/bin"}
+            - { regexp: '$HOME/.gem/ruby', line:  "export $HOME/.gem/ruby/$(ruby -v | awk -F ' ' '{print $2}' | cut -d '.' -f 1,2).0/bin"}
             - { regexp: 'GEM_HOME=$HOME/.gem/ruby', line:  "export GEM_HOME=$HOME/.gem/ruby/$(ruby -v | awk -F ' ' '{print $2}' | cut -d '.' -f 1,2).0"}
             - { regexp: '$HOME/.npm/bin', line:  'export PATH=$PATH:$HOME/.npm/bin'}
             - { regexp: '$HOME/.local/bin', line:  'export PATH=$PATH:$HOME/.local/bin'}
