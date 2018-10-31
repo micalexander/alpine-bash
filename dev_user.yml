@@ -1,0 +1,111 @@
+- hosts: 127.0.0.1
+  connection: local
+  vars:
+    phps:
+      - wp-cli/wp-cli
+    npms:
+      - gulp-cli
+    gems:
+      - swiftly
+      - trio
+    pip2:
+      - neovim
+      - powerline-status
+    pip3:
+      - awscli
+      - dopy
+      - httpie-unixsocket
+      - httpie
+      - neovim
+      - neovim-remote
+  environment:
+    PATH: "/usr/local/php/bin:/usr/local/node/bin:/usr/local/ruby/bin:/usr/local/python2/bin:/usr/local/python3/bin:{{ ansible_env.PATH }}"
+  tasks:
+    - name: create user {{ user }}
+      user:
+        name: "{{ user }}"
+        shell: /bin/bash
+        state: present
+        uid: 1000
+        groups: root
+        append: yes
+    - name: add {{ user }} to sudoers file
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: "^%{{ user }}"
+        line: "%{{ user }} ALL=(ALL) NOPASSWD: ALL"
+    - name: add {{ user }} to sudoers file
+      lineinfile:
+        create: yes
+        dest: /etc/profile.d/global-envs.sh
+        state: present
+        regexp: "^%{{ item.regexp }}"
+        line: "{{ item.line }}"
+      with_items:
+        - { regexp: 'LD_LIBRARY_PATH', line:  'export LD_LIBRARY_PATH=/usr/local/php/lib:/usr/local/node/lib:/usr/local/ruby/lib:/usr/local/python2/lib:/usr/local/python3/lib'}
+        - { regexp: '$PATH', line:  'export PATH=/usr/local/php/bin:/usr/local/node/bin:/usr/local/ruby/bin:/usr/local/python2/bin:/usr/local/python3/bin:$PATH' }
+    - name: Install global packs
+      become: yes
+      become_user: ubuntu
+      block:
+        - name: ensure that {{ user }} paths are set
+          lineinfile:
+            create: yes
+            dest: ~/.bash_profile
+            state: present
+            regexp: "^%{{ item.regexp }}"
+            line: "{{ item.line }}"
+          with_items:
+            - { regexp: '$HOME/.gem/ruby', line:  "$HOME/.gem/ruby/$(ruby -v | awk -F ' ' '{print $2}' | cut -d '.' -f 1,2).0/bin"}
+            - { regexp: 'GEM_HOME=$HOME/.gem/ruby', line:  "export GEM_HOME=$HOME/.gem/ruby/$(ruby -v | awk -F ' ' '{print $2}' | cut -d '.' -f 1,2).0"}
+            - { regexp: '$HOME/.npm/bin', line:  'export PATH=$PATH:$HOME/.npm/bin'}
+            - { regexp: '$HOME/.local/bin', line:  'export PATH=$PATH:$HOME/.local/bin'}
+            - { regexp: '$HOME/.composer/vendor/bin', line:  'export PATH=$PATH:$HOME/.composer/vendor/bin'}
+            - { regexp: '/var/run/docker.sock', line:  "if [ -e /var/run/docker.sock ]; then sudo chown `whoami`:`whoami` /var/run/docker.sock; fi"}
+        - name: ensure that {{ user }} pip.conf exists
+          lineinfile:
+            create: yes
+            dest: ~/.config/pip/pip.conf
+            state: present
+            regexp: "^%{{ item.regexp }}"
+            line: "{{ item.line }}"
+          with_items:
+            - { regexp: '[install]', line: '[install]'}
+            - { regexp: 'user=1', line: 'user=1'}
+        - name: ensure that {{ user }} .npmrc exists
+          lineinfile:
+            create: yes
+            dest: ~/.npmrc
+            state: present
+            regexp: "^%{{ item.regexp }}"
+            line: "{{ item.line }}"
+          with_items:
+            - { regexp: 'prefix = ${HOME}/.npm', line: 'prefix = ${HOME}/.npm'}
+        - name: install composer packs {{ phps }}
+          composer:
+            command: require
+            global_command: yes
+            arguments: "{{ item }}"
+          with_items: "{{ phps }}"
+        - name: install npm packages {{ npms }}
+          npm:
+            name: "{{ item }}"
+            state: present
+            path: ~/.npm
+            global: yes
+          with_items: "{{ npms }}"
+        - name: install ruby gems {{ gems }}
+          gem:
+            name: "{{ item }}"
+            user_install: yes
+          with_items: "{{ gems }}"
+        - name: install pip2 packs {{ pip2 }}
+          pip:
+            extra_args: --user
+            name: "{{ pip2 }}"
+        - name: install pip3 packs {{ pip3 }}
+          pip:
+            executable: pip3
+            extra_args: --user
+            name: "{{ pip3 }}"

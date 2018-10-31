@@ -1,34 +1,4 @@
 #!/bin/bash
-app_dir=$(pwd)
-
-append_line "/etc/sudoers" "PATH PYTHONPATH LD_LIBRARY_PATH" 'Defaults env_keep += "PATH PYTHONPATH LD_LIBRARY_PATH PYTHON2_LOCAL_DIR PYTHON3_LOCAL_DIR PHP_LOCAL_DIR NODE_LOCAL_DIR RUBY_LOCAL_DIR GO_LOCAL_DIR"'
-append_line "/etc/sudoers" "${DEV_USER}" "${DEV_USER} ALL=(ALL) NOPASSWD:ALL"
-
-append_line "/etc/environment" "PHP_LOCAL_DIR" "PHP_LOCAL_DIR=/usr/local/php/bin"
-append_line "/etc/environment" "NODE_LOCAL_DIR" "NODE_LOCAL_DIR=/usr/local/node/bin"
-append_line "/etc/environment" 'PATH=/usr/local/node/bin' 'PATH=/usr/local/node/bin:$PATH'
-append_line "/etc/environment" 'LD_LIBRARY_PATH=$PHP_LOCAL_DIR' 'LD_LIBRARY_PATH=$PHP_LOCAL_DIR/../lib:$LD_LIBRARY_PATH'
-append_line "/etc/environment" 'LD_LIBRARY_PATH=$NODE_LOCAL_DIR' 'LD_LIBRARY_PATH=$NODE_LOCAL_DIR/../lib:$LD_LIBRARY_PATH'
-
-if ! [[ `id -u ${DEV_USER} 2>/dev/null || echo -1` -ge 0 ]]; then
-  adduser -D -g ${DEV_USER} ${DEV_USER} -s /bin/bash
-  touch /home/${DEV_USER}/.newuser
-  chown ${DEV_USER}:${DEV_USER} /home/${DEV_USER}/.newuser
-  chown ${DEV_USER}:${DEV_USER} /usr/local/bin/docker-bash-pathways
-  chown ${DEV_USER}:${DEV_USER} /usr/local/bin/docker-bash-globals
-fi
-
-ansible-playbook /usr/local/bin/packs.yml
-
-
-sudo -u "${DEV_USER}" -i /bin/bash <<-'EOF'
-
-  if [[ -f "$HOME/.newuser" ]]; then
-    docker-bash-pathways
-    source $HOME/.bash_profile
-    rm $HOME/.newuser
-  fi
-
-EOF
+ansible-playbook /usr/local/bin/dev_user.yml --extra-vars "user=${DEV_USER}"
 
 tail -f /dev/null
