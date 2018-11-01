@@ -20,6 +20,7 @@
       - neovim-remote
   environment:
     PATH: "/usr/local/php/bin:/usr/local/node/bin:/usr/local/ruby/bin:/usr/local/python2/bin:/usr/local/python3/bin:{{ ansible_env.PATH }}"
+    LD_LIBRARY_PATH: "/usr/local/php/lib:/usr/local/node/lib:/usr/local/ruby/lib:/usr/local/python2/lib:/usr/local/python3/lib"
   tasks:
     - name: create user {{ user }}
       user:
@@ -40,39 +41,34 @@
         create: yes
         dest: /etc/profile.d/global-envs.sh
         state: present
-        regexp: "^{{ item.regexp }}"
-        line: "{{ item.line }}"
+        line: "{{ item }}"
       with_items:
-        - { regexp: 'LD_LIBRARY_PATH', line:  'export LD_LIBRARY_PATH=/usr/local/php/lib:/usr/local/node/lib:/usr/local/ruby/lib:/usr/local/python2/lib:/usr/local/python3/lib'}
-        - { regexp: '$PATH', line:  'export PATH=/usr/local/php/bin:/usr/local/node/bin:/usr/local/ruby/bin:/usr/local/python2/bin:/usr/local/python3/bin:$PATH' }
+        - 'export LD_LIBRARY_PATH=/usr/local/php/lib:/usr/local/node/lib:/usr/local/ruby/lib:/usr/local/python2/lib:/usr/local/python3/lib'
+        - 'export PATH=/usr/local/php/bin:/usr/local/node/bin:/usr/local/ruby/bin:/usr/local/python2/bin:/usr/local/python3/bin:$PATH'
     - name: Install global packs
       become: yes
-      become_user: ubuntu
+      become_user: "{{ user }}"
       block:
-        - name: ensure that {{ user }} paths are set
-          lineinfile:
-            create: yes
-            dest: ~/.bash_profile
-            state: present
-            regexp: "{{ item.regexp }}"
-            line: "{{ item.line }}"
+        - name: update file
+          shell: grep -q "{{ item.regexp }}" ~/.bash_profile && echo exists || echo "{{ item.line }}" >> ~/.bash_profile
+          register: result
+          changed_when: result.stdout.find('exists') == -1
           with_items:
-            - { regexp: '$HOME/.gem/ruby', line:  "export $HOME/.gem/ruby/$(ruby -v | awk -F ' ' '{print $2}' | cut -d '.' -f 1,2).0/bin"}
-            - { regexp: 'GEM_HOME=$HOME/.gem/ruby', line:  "export GEM_HOME=$HOME/.gem/ruby/$(ruby -v | awk -F ' ' '{print $2}' | cut -d '.' -f 1,2).0"}
-            - { regexp: '$HOME/.npm/bin', line:  'export PATH=$PATH:$HOME/.npm/bin'}
-            - { regexp: '$HOME/.local/bin', line:  'export PATH=$PATH:$HOME/.local/bin'}
-            - { regexp: '$HOME/.composer/vendor/bin', line:  'export PATH=$PATH:$HOME/.composer/vendor/bin'}
+            - { regexp: 'GEM_HOME=\$HOME/.gem/ruby', line:  "export GEM_HOME=$HOME/.gem/ruby/$(ruby -v | awk -F ' ' '{print $2}' | cut -d '.' -f 1,2).0"}
+            - { regexp: '\$HOME/.gem/ruby', line:  'export PATH=$PATH:$HOME/.gem/ruby/$(ruby -v | awk -F " " "{print $2}" | cut -d "." -f 1,2).0/bin'}
+            - { regexp: '\$HOME/.npm/bin', line:  'export PATH=$PATH:$HOME/.npm/bin'}
+            - { regexp: '\$HOME/.local/bin', line:  'export PATH=$PATH:$HOME/.local/bin'}
+            - { regexp: '\$HOME/.composer/vendor/bin', line:  'export PATH=$PATH:$HOME/.composer/vendor/bin'}
             - { regexp: '/var/run/docker.sock', line:  "if [ -e /var/run/docker.sock ]; then sudo chown `whoami`:`whoami` /var/run/docker.sock; fi"}
         - name: ensure that {{ user }} pip.conf exists
           lineinfile:
             create: yes
             dest: ~/.config/pip/pip.conf
             state: present
-            regexp: "{{ item.regexp }}"
-            line: "{{ item.line }}"
+            line: "{{ item }}"
           with_items:
-            - { regexp: '[install]', line: '[install]'}
-            - { regexp: 'user=1', line: 'user=1'}
+            - '[install]'
+            - 'user=1'
         - name: ensure that {{ user }} .npmrc exists
           lineinfile:
             create: yes
@@ -102,6 +98,7 @@
           with_items: "{{ gems }}"
         - name: install pip2 packs {{ pip2 }}
           pip:
+            executable: pip2
             extra_args: --user
             name: "{{ pip2 }}"
         - name: install pip3 packs {{ pip3 }}

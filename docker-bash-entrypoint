@@ -1,4 +1,11 @@
 #!/bin/bash
+
+export LD_LIBRARY_PATH=/usr/local/python2/lib:/usr/local/python3/lib
+
+/usr/local/python3/bin/pip3 install --user ansible
+
+export PATH=/root/.local/bin:$PATH
+
 ansible-playbook /usr/local/bin/dev_user.yml --extra-vars "user=${DEV_USER}"
 
 tail -f /dev/null
