@@ -47,6 +47,7 @@ RUN apk add --update --update-cache \
   sed \
   shadow \
   sqlite-libs \
+  sshpass \
   tcpdump \
   the_silver_searcher \
   tmux \
