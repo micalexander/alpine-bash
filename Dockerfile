@@ -26,6 +26,7 @@ RUN apk add --update --update-cache \
   libnotify \
   libpng-dev \
   libressl2.7-libcrypto \
+  libressl2.7-libssl \
   libsodium \
   libxml2-dev \
   libxslt-dev \
