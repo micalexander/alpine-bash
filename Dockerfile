@@ -59,6 +59,9 @@ RUN apk add --update --update-cache \
   yaml-dev \
   yarn \
   && rm -rf /var/cache/apk/*
+  
+RUN apk add libssl1.0 --repository=http://nl.alpinelinux.org/alpine/v3.8/main \
+  && rm -rf /var/cache/apk/*
 
 COPY dev_user.yml /usr/local/bin/
 COPY docker-bash-entrypoint /usr/local/bin/
