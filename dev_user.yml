@@ -12,6 +12,7 @@
       - neovim
       - powerline-status
     pip3:
+      - ansible
       - awscli
       - dopy
       - httpie-unixsocket
